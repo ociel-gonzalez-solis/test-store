@@ -1,15 +1,13 @@
 import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import { red, } from '@mui/material/colors';
 
 
 export const lightTheme = createTheme({
   palette: {
     mode   : 'light',
-
     primary: {
-      main: '##1E1E1E'
+      main: '#1E1E1E'
     },
-
     secondary: {
       main: '#3A64D8'
     },
@@ -17,20 +15,17 @@ export const lightTheme = createTheme({
       main: '#fff'
     }
   },
-
   components: {
     MuiLink: {
       defaultProps: {
         underline: 'none',
       },
     },
-
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
         position : 'fixed',
       },
-
       styleOverrides: {
         root: {
           backgroundColor: 'white',
@@ -56,6 +51,7 @@ export const lightTheme = createTheme({
       }
     },
 
+
     MuiButton: {
       defaultProps: {
         variant         : 'contained',
@@ -63,7 +59,6 @@ export const lightTheme = createTheme({
         disableElevation: true,
         color           : 'info'
       },
-      
       styleOverrides: {
         root: {
           textTransform: 'none',
@@ -77,6 +72,7 @@ export const lightTheme = createTheme({
       }
     },
 
+
     MuiCard: {
       defaultProps: {
         elevation: 0
@@ -88,5 +84,6 @@ export const lightTheme = createTheme({
         }
       }
     }
+
   }
 });

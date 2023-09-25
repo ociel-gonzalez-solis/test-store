@@ -51,7 +51,7 @@ export const Navbar = () => {
           <SearchOutlined />
         </IconButton>
 
-        <NextLink href="/category/ men" passHref legacyBehavior>
+        <NextLink href="/cart" passHref legacyBehavior>
           <Link>
             <IconButton>
               <Badge badgeContent={2} color="secondary">

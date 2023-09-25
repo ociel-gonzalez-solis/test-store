@@ -3,9 +3,9 @@ import { FC, PropsWithChildren } from "react";
 import { Navbar, SideMenu } from "../ui";
 
 interface Props extends PropsWithChildren {
-  title: string;
-  pageDescription: string;
-  imageFullUrl?: string;
+  title           : string;
+  pageDescription : string;
+  imageFullUrl   ?: string;
 }
 
 export const ShopLayout: FC<Props> = ({

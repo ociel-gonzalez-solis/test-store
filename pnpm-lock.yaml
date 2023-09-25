@@ -17,6 +17,9 @@ dependencies:
   '@mui/material':
     specifier: ^5.14.7
     version: 5.14.7(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+  '@mui/x-data-grid':
+    specifier: ^6.15.0
+    version: 6.15.0(@mui/material@5.14.7)(@mui/system@5.14.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
   '@types/node':
     specifier: 20.5.9
     version: 20.5.9
@@ -80,6 +83,13 @@ packages:
 
   /@babel/runtime@7.22.11:
     resolution: {integrity: sha512-ee7jVNlWN09+KftVOu9n7S8gQzD/Z6hN/I8VBRXW4P1+Xe7kJGXMwu8vds4aGIMHZnNbdpSWCfZZtinytpcAvA==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.0
+    dev: false
+
+  /@babel/runtime@7.22.15:
+    resolution: {integrity: sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
@@ -400,6 +410,24 @@ packages:
       '@types/react': 18.2.21
     dev: false
 
+  /@mui/utils@5.14.10(@types/react@18.2.21)(react@18.2.0):
+    resolution: {integrity: sha512-Rn+vYQX7FxkcW0riDX/clNUwKuOJFH45HiULxwmpgnzQoQr3A0lb+QYwaZ+FAkZrR7qLoHKmLQlcItu6LT0y/Q==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.22.15
+      '@types/prop-types': 15.7.5
+      '@types/react': 18.2.21
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-is: 18.2.0
+    dev: false
+
   /@mui/utils@5.14.7(react@18.2.0):
     resolution: {integrity: sha512-RtheP/aBoPogVdi8vj8Vo2IFnRa4mZVmnD0RGlVZ49yF60rZs+xP4/KbpIrTr83xVs34QmHQ2aQ+IX7I0a0dDw==}
     engines: {node: '>=12.0.0'}
@@ -412,6 +440,28 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 18.2.0
+    dev: false
+
+  /@mui/x-data-grid@6.15.0(@mui/material@5.14.7)(@mui/system@5.14.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0u7Z+al7M1BOni5SILp+gc4coJy88oOrUoVfOSGQdfTAJwcoHvP3KZYA80MGBsQwo5A9/bZz40HK8+mdm+ftnA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@mui/material': ^5.4.1
+      '@mui/system': ^5.4.1
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@babel/runtime': 7.22.15
+      '@mui/material': 5.14.7(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/system': 5.14.7(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.21)(react@18.2.0)
+      '@mui/utils': 5.14.10(@types/react@18.2.21)(react@18.2.0)
+      clsx: 2.0.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      reselect: 4.1.8
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /@next/env@13.4.19:
@@ -877,6 +927,10 @@ packages:
 
   /regenerator-runtime@0.14.0:
     resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
+    dev: false
+
+  /reselect@4.1.8:
+    resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
     dev: false
 
   /resize-observer-polyfill@1.5.1:
