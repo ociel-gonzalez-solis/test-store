@@ -1,13 +1,7 @@
 import { ShopLayout } from "@/components/layouts";
 import { ProductList } from "@/components/products";
 import { initialData } from "@/database/products";
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 
 export default function Home() {
   return (
