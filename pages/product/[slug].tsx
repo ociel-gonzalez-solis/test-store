@@ -1,12 +1,23 @@
 import { ShopLayout } from "@/components/layouts";
 import { ProductSlideShow, SizeSelector } from "@/components/products";
 import { ItemCounter } from "@/components/ui";
-import { initialData } from "@/database/products";
+import { dbProducts } from "@/database";
+import { useProducts } from "@/hooks";
+import { IProduct } from "@/interfaces";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+import { NextPage, GetServerSideProps,GetStaticPaths } from "next";
+import { useRouter } from "next/router";
 
-const product = initialData.products[0];
+interface Props {
+  product: IProduct;
+}
 
-const Product = () => {
+const Product: NextPage<Props> = ({ product }) => {
+  // const router = useRouter();
+  // const { products: product, isLoading } = useProducts(
+  //   `/products/${router.query.slug}`
+  // );
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -52,3 +63,36 @@ const Product = () => {
 };
 
 export default Product;
+
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
+  // const { data } = await  // your fetch function here 
+
+  return {
+    paths: [
+      {
+        params: {
+          
+        }
+      }
+    ],
+    fallback: "blocking"
+  }
+}
+
+// ! NO usar SSR
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   const product = await dbProducts.getProductBySlot(`${query.slug}`);
+
+//   if (!product) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   return {
+//     props: { product },
+//   };
+// };

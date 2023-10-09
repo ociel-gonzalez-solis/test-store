@@ -1,9 +1,16 @@
 import { ShopLayout } from "@/components/layouts";
 import { ProductList } from "@/components/products";
 import { initialData } from "@/database/products";
+import { useProducts } from "@/hooks";
 import { Typography } from "@mui/material";
+import { FullScreenLoading } from "../components/ui/FullScreenLoading";
+import { NextPage } from "next";
 
-export default function Home() {
+const HomePage: NextPage = () => {
+  const { products, isError, isLoading } = useProducts("/products");
+
+  console.log({ products });
+
   return (
     <ShopLayout
       title={"SoulisStore - Home"}
@@ -16,7 +23,9 @@ export default function Home() {
         Todos los productos
       </Typography>
 
-      <ProductList products={initialData.products as any} />
+      {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
     </ShopLayout>
   );
-}
+};
+
+export default HomePage;
