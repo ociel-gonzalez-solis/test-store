@@ -8,6 +8,7 @@ import {
   Box,
   Typography,
   Link,
+  Chip,
 } from "@mui/material";
 import { FC, useMemo, useState } from "react";
 
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const ProductCard: FC<Props> = ({ product }) => {
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isHovered, setIsHovered]         = useState<boolean>(false);
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
 
   const productImage = useMemo(() => {
@@ -42,6 +43,18 @@ export const ProductCard: FC<Props> = ({ product }) => {
         >
           <Link>
             <CardActionArea>
+              {product.inStock === 0 && (
+                <Chip
+                  color="primary"
+                  label="No hay disponibles"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
               <CardMedia
                 className="fadeIn"
                 component="img"

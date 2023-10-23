@@ -38,7 +38,9 @@ const searchProducts = async (
 
     const products = await Product.find({
         $text: { $search: q },
-    }).lean();
+    })
+    .select('title images price inStock slug -_id')
+    .lean();
     await db.disconnect();
 
     return res.status(StatusCodes.OK).json(products);

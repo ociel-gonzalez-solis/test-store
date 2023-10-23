@@ -1,22 +1,56 @@
+import { useContext, useState } from "react";
+import { NextPage, GetStaticPaths, GetStaticProps } from "next";
+import { useRouter } from "next/router";
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+
 import { ShopLayout } from "@/components/layouts";
 import { ProductSlideShow, SizeSelector } from "@/components/products";
 import { ItemCounter } from "@/components/ui";
+
 import { dbProducts } from "@/database";
-import { useProducts } from "@/hooks";
-import { IProduct } from "@/interfaces";
-import { Box, Button, Chip, Grid, Typography } from "@mui/material";
-import { NextPage, GetServerSideProps,GetStaticPaths } from "next";
-import { useRouter } from "next/router";
+import { ICartProduct, IProduct } from "@/interfaces";
+import { ISize } from "@/types";
+import { CartContext } from "@/context/cart";
 
 interface Props {
   product: IProduct;
 }
 
 const Product: NextPage<Props> = ({ product }) => {
-  // const router = useRouter();
-  // const { products: product, isLoading } = useProducts(
-  //   `/products/${router.query.slug}`
-  // );
+  const router = useRouter();
+  const {addProductToCart} = useContext(CartContext)
+
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id     : product._id,
+    images  : product.images[0],
+    price   : product.price,
+    size    : undefined,
+    slug    : product.slug,
+    title   : product.title,
+    gender  : product.gender,
+    quantity: 1,
+  });
+
+  const addProduct = () => {
+    if (!tempCartProduct.size) return;
+    
+    addProductToCart(tempCartProduct);
+    router.push('/cart')
+  };
+
+  const onSelectedSize = (size: ISize) => {
+    setTempCartProduct((prevCartProduct) => ({
+      ...prevCartProduct,
+      size,
+    }));
+  };
+
+  const updatedQuantity = (quantity: number) => {
+    setTempCartProduct((prevCartProduct) => ({
+      ...prevCartProduct,
+      quantity,
+    }));
+  };
 
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
@@ -37,19 +71,40 @@ const Product: NextPage<Props> = ({ product }) => {
 
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2">Cantidad</Typography>
-              <ItemCounter />
+              <ItemCounter
+                currentValue={tempCartProduct.quantity}
+                updatedQuantity={updatedQuantity}
+                maxValue={
+                  product.inStock < tempCartProduct.quantity
+                    ? tempCartProduct.quantity
+                    : product.inStock
+                }
+              />
               <SizeSelector
-                selectedSize={product.sizes[3]}
                 sizes={product.sizes}
+                selectedSize={tempCartProduct.size}
+                onSelectedSize={onSelectedSize}
               />
             </Box>
+            {product.inStock > 0 ? (
+              <Button
+                color="secondary"
+                className="circular-btn"
+                onClick={addProduct}
+              >
+                {tempCartProduct.size
+                  ? "Agregar al carrito"
+                  : "Seleccione una talla"}
+              </Button>
+            ) : (
+              <Chip
+                label="No hay disponibles"
+                color="error"
+                variant="outlined"
+              />
+            )}
 
             {/* Agregar al Carrito */}
-            <Button color="secondary" className="circular-btn">
-              Agregar al carrito
-            </Button>
-
-            <Chip label="No hay disponibles" color="error" variant="outlined" />
             {/* Desc */}
             <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle2">Descripcion</Typography>
@@ -65,34 +120,35 @@ const Product: NextPage<Props> = ({ product }) => {
 export default Product;
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-  // const { data } = await  // your fetch function here 
+  const productSlugs = await dbProducts.getAllProductsBySlot();
 
   return {
-    paths: [
-      {
-        params: {
-          
-        }
-      }
-    ],
-    fallback: "blocking"
+    paths: productSlugs.map(({ slug }) => ({
+      params: {
+        slug,
+      },
+    })),
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug = "" } = params as { slug: string };
+  const product = await dbProducts.getProductBySlot(slug);
+
+  if (!product) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   }
-}
 
-// ! NO usar SSR
-// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-//   const product = await dbProducts.getProductBySlot(`${query.slug}`);
-
-//   if (!product) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: { product },
-//   };
-// };
+  return {
+    props: {
+      product,
+    },
+    revalidate: 60 * 60 * 24,
+  };
+};

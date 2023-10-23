@@ -8,18 +8,44 @@ import {
   Button,
   IconButton,
   Badge,
+  Input,
+  InputAdornment,
 } from "@mui/material";
 
-import { SearchOutlined, ShoppingCartOutlined } from "@mui/icons-material";
+import { ClearOutlined, SearchOutlined, ShoppingCartOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, ChangeEvent, KeyboardEvent, useState } from 'react';
 import { UIContext } from "@/context";
 
 export const Navbar = () => {
-  const router             = useRouter();
+  const router = useRouter();
   const { toggleSideMenu } = useContext(UIContext);
-  const activeLink         = (href: string) =>
+  const activeLink = (href: string) =>
     href === router.asPath ? "primary" : "info";
+
+    const [searchTerm, setSearchTerm] = useState<string>("");
+
+    const getSearchValue = ({ target }: ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(target.value);
+    };
+
+    const onSearchTerm = () => {
+      if (searchTerm.trim().length === 0) return;
+
+
+      navigateTo(`/search/${searchTerm}`);
+    };
+
+    const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        onSearchTerm();
+      }
+    };
+
+    const navigateTo = (url: string) => {
+      toggleSideMenu();
+      router.push(url);
+    };
 
   return (
     <AppBar>
@@ -57,7 +83,31 @@ export const Navbar = () => {
 
         <Box flex={1} />
 
-        <IconButton>
+        {/* Pantallas grandes */}
+        {/* <IconButton>
+          <SearchOutlined />
+        </IconButton> */}
+        <Input
+          autoFocus
+          value={searchTerm}
+          onChange={getSearchValue}
+          onKeyUp={handleKeyPress}
+          type="text"
+          placeholder="Buscar..."
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton onClick={onSearchTerm}>
+                <ClearOutlined />
+              </IconButton>
+            </InputAdornment>
+          }
+        />
+
+        {/* Pantallas minis */}
+        <IconButton
+          sx={{ display: { xs: "flex", sm: "none" } }}
+          onClick={toggleSideMenu}
+        >
           <SearchOutlined />
         </IconButton>
 

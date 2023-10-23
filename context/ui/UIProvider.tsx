@@ -5,7 +5,7 @@ export interface UIState {
   isMenuOpen: boolean;
 }
 
-const UI_INITIAL_STATE = {
+const UI_INITIAL_STATE: UIState = {
   isMenuOpen: false,
 };
 
@@ -13,7 +13,7 @@ export const UIProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(uiReducer, UI_INITIAL_STATE);
 
   const toggleSideMenu = () => {
-    dispatch({ type: "[UI - Toggle Menu" });
+    dispatch({ type: "[UI] - Toggle Menu" });
   };
 
   return (
