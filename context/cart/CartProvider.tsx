@@ -1,20 +1,32 @@
-import { FC, PropsWithChildren, useEffect, useReducer } from "react";
+import { FC, PropsWithChildren, useEffect, useMemo, useReducer, useRef } from "react";
 
 import Cookie from 'js-cookie';
 
 import { cartReducer, CartContext } from ".";
 import { ICartProduct } from "@/interfaces";
 
-export interface ICartState {
+export interface IOrderSummary {
+  numberOfItems: number;
+  subTotal     : number;
+  tax          : number;
+  total        : number;
+}
+
+export interface ICartState extends IOrderSummary {
   cart: ICartProduct[];
 }
 
 const CART_INITIAL_STATE: ICartState = {
-  cart: [],
+  cart         : [],
+  numberOfItems: 0,
+  subTotal     : 0,
+  tax          : 0,
+  total        : 0,
 };
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE);
+  const isReloading       = useRef<boolean>(true);
 
   useEffect(() => {
     try {
@@ -36,6 +48,59 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     // Cookie.set('cart', JSON.stringify(state.cart));
     if (state.cart.length > 0) Cookie.set("cart", JSON.stringify(state.cart));
+  }, [state.cart]);
+
+ const orderSummary = useMemo(() => {
+   const numberOfItems = state.cart.reduce(
+     (prev, current) => prev + current.quantity,
+     0
+   );
+   const subTotal = state.cart.reduce(
+     (prev, current) => prev + current.price * current.quantity,
+     0
+   );
+   const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE ?? 0);
+
+   return {
+     numberOfItems,
+     subTotal,
+     tax  : subTotal * taxRate,
+     total: subTotal * (taxRate + 1),
+   };
+ }, [state.cart]);
+
+  useEffect(() => {
+    // const numberOfItems = state.cart.reduce(
+    //   (prev, current) => current.quantity + prev,
+    //   0
+    // );
+
+    // const subTotal = state.cart.reduce(
+    //   (prev, current) => (current.price * current.quantity) + prev,
+    //   0
+    // );
+
+    // const taxRate = +process.env.NEXT_PUBLIC_TAX_RATE! || 0;
+
+    // const orderSummary: IOrderSummary = {
+    //   numberOfItems,
+    //   subTotal,
+    //   tax  : subTotal * taxRate,
+    //   total: subTotal * (taxRate + 1),
+    // };
+    console.log({ orderSummary });
+    dispatch({
+      type   : "[Cart] - Update order summary",
+      payload: orderSummary,
+    });
+  }, [state.cart]);
+
+  useEffect(() => {
+    if (isReloading.current) {
+      isReloading.current = false;
+    } else {
+      Cookie.set("cart", JSON.stringify(state.cart));
+    }
   }, [state.cart]);
 
   const addProductToCart = (product: ICartProduct) => {

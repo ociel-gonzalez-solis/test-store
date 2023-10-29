@@ -1,11 +1,12 @@
 import { ICartProduct } from "@/interfaces";
-import { ICartState } from ".";
+import { ICartState, IOrderSummary } from ".";
 
 type CartActionType =
     | { type: '[Cart] - LoadCart from cookies | storage', payload: ICartProduct[] }
     | { type: '[Cart] - Update products in cart', payload: ICartProduct[] }
     | { type: '[Cart] - Change product quantity', payload: ICartProduct }
     | { type: '[Cart] - Remove product in cart', payload: ICartProduct }
+    | { type: '[Cart] - Update order summary', payload: IOrderSummary }
 
 export const cartReducer = (state: ICartState, action: CartActionType): ICartState => {
     switch (action.type) {
@@ -32,12 +33,20 @@ export const cartReducer = (state: ICartState, action: CartActionType): ICartSta
                     return action.payload;
                 })
             }
+
         case '[Cart] - Remove product in cart':
             return {
                 ...state,
                 cart: state.cart.filter(
                     p => p._id !== action.payload._id && p.size !== action.payload.size
                 )
+            }
+
+
+        case '[Cart] - Update order summary':
+            return {
+                ...state,
+                ...action.payload
             }
 
         default:
