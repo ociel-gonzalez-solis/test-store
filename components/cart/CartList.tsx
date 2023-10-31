@@ -1,5 +1,4 @@
 import { NextLink } from "@/constants";
-import { initialData } from "@/database/products";
 import {
   Box,
   Button,
@@ -33,7 +32,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
 
   const removeProductInCart = (product: ICartProduct) => {
     removeCartProduct(product);
-  }
+  };
 
   return (
     <>

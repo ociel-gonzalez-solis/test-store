@@ -1,31 +1,30 @@
-# NextJs Soulis Store
-
-Para correr localmente se necesita la BD.
+# Next.js Telo Shop
+Para correr localmente, se necesita la base de datos.
 ```
 docker-compose up -d
 ```
 
-* El -d significa **detached**
+* El -d, significa __detached__
+
+
 
 ## Configurar las variables de entorno
-
-Renombrar el archivo **.env.template** a **.env.**
-
-* MongoDB URL local:
-  ```
-
-  MONGO_URL=mongodb://localhost:27017/soulisstoredb
-  ```
-
-* Reconstruir los modulos de node y next
+Renombrar el archivo __.env.template__ a __.env__
+* MongoDB URL Local:
 ```
-pnpm i
-pnpm start
+MONGO_URL=mongodb://localhost:27017/soulisstoredb
 ```
 
-## Llenar la información de la base de datos con informacionde pruebas
+* Reconstruir los módulos de node y levantar Next
+```
+pnpm install
+pnpm run dev
+```
 
-Llamar a:
+
+## Llenar la base de datos con información de pruebas
+
+Llamara:
 ```
 http://localhost:3000/api/seed
 ```
