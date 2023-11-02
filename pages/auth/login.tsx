@@ -2,11 +2,21 @@ import { soulisStoreApi } from "@/api";
 import { AuthLayout } from "@/components/layouts";
 import { NextLink } from "@/constants";
 import { validations } from "@/utils";
-import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { ErrorOutline } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Chip,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 type FormData = {
-  email: string;
+  email   : string;
   password: string;
 };
 
@@ -16,17 +26,21 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
+  const [showError, setShowError] = useState<boolean>(false);
 
   const onLoginUser = async ({ email, password }: FormData) => {
+    setShowError((prev) => false);
+    
     try {
       const { data } = await soulisStoreApi.post("/user/login", {
         email,
         password,
       });
-      const {token, user} = data;
-      console.log({token, user});
+      const { token, user } = data;
+      console.log({ token, user });
     } catch (error) {
-      console.log('Error de credenciales');
+      console.log("Error de credenciales");
+      setTimeout(() => setShowError((prev) => true), 3000);
     }
   };
 
@@ -39,6 +53,13 @@ const LoginPage = () => {
               <Typography variant="h1" component="h1" textAlign="center">
                 Iniciar sesion
               </Typography>
+              <Chip
+                label="No reconocemos este usuario / secreto"
+                color="error"
+                icon={<ErrorOutline />}
+                className="fadeIn"
+                sx={{display: showError ? 'flex': 'none'}}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -60,7 +81,7 @@ const LoginPage = () => {
                 type="password"
                 {...register("password", {
                   required: "Este campo es requerido",
-                  minLength: { value: 6, message: "Al menos 6 caracteres" },
+                  minLength: { value: 5, message: "Al menos 5 caracteres" },
                 })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
