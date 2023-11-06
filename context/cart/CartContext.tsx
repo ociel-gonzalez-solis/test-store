@@ -7,6 +7,7 @@ interface ContextProps extends IOrderSummary {
   addProductToCart : (product: ICartProduct) => void;
   updateQuantity   : (product: ICartProduct) => void;
   removeCartProduct: (product: ICartProduct) => void;
+  isLoaded         : boolean;
 }
 
 export const CartContext = createContext({} as ContextProps);

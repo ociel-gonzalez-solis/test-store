@@ -1,4 +1,3 @@
-import { soulisStoreApi } from "@/api";
 import { AuthLayout } from "@/components/layouts";
 import { NextLink } from "@/constants";
 import { AuthContext } from "@/context";
@@ -34,8 +33,9 @@ const RegisterPage = () => {
       setTimeout(() => setShowError((prev) => false), 3000);
       return;
     }
+    const destination = router.query.p?.toString() || '/'
 
-    router.replace("/");
+    router.replace(destination);
   };
 
   return (
@@ -102,11 +102,19 @@ const RegisterPage = () => {
                 size="large"
                 fullWidth
               >
-                Ingresar
+                Registrar
               </Button>
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href="/auth/login" legacyBehavior passHref>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/login?p=${router.query.p}`
+                    : "/auth/login"
+                }
+                legacyBehavior
+                passHref
+              >
                 <Link underline="always">Ya tienes cuenta?</Link>
               </NextLink>
             </Grid>

@@ -39,7 +39,9 @@ const LoginPage = () => {
       return;
     }
 
-    router.replace('/');
+    const destination = router.query.p?.toString() || '/'
+
+    router.replace(destination);
   };
 
   return (
@@ -56,7 +58,7 @@ const LoginPage = () => {
                 color="error"
                 icon={<ErrorOutline />}
                 className="fadeIn"
-                sx={{display: showError ? 'flex': 'none'}}
+                sx={{ display: showError ? "flex" : "none" }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -97,7 +99,15 @@ const LoginPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href="/auth/register" legacyBehavior passHref>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/register?p=${router.query.p}`
+                    : "/auth/register"
+                }
+                legacyBehavior
+                passHref
+              >
                 <Link underline="always">No tienes cuenta?</Link>
               </NextLink>
             </Grid>

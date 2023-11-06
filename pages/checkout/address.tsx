@@ -1,4 +1,5 @@
 import { ShopLayout } from "@/components/layouts";
+import { customJWT } from "@/utils";
 import {
   Box,
   Button,
@@ -10,8 +11,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { GetServerSideProps } from "next";
 
 const AddressPage = () => {
+
   return (
     <ShopLayout
       title="Direccion"
@@ -77,3 +80,30 @@ const AddressPage = () => {
 };
 
 export default AddressPage;
+
+export const getServerSideProps: GetServerSideProps = async ({req}) => {
+  const { token = ''} = req.cookies;
+  let isValidToken = false;
+
+  try {
+    await customJWT.isValidToken(token);
+    isValidToken = true;
+  } catch (error) {
+    isValidToken = false;
+  }
+
+  if (!isValidToken) {
+    return {
+      redirect: {
+        destination: '/auth/login?p=/checkout/address',
+        permanent  : false
+      }
+    }
+  }
+
+  return {
+    props: {
+      
+    }
+  }
+}

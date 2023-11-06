@@ -13,10 +13,12 @@ export interface IOrderSummary {
 }
 
 export interface ICartState extends IOrderSummary {
-  cart: ICartProduct[];
+  cart    : ICartProduct[];
+  isLoaded: boolean;
 }
 
 const CART_INITIAL_STATE: ICartState = {
+  isLoaded     : false,
   cart         : [],
   numberOfItems: 0,
   subTotal     : 0,
