@@ -46,7 +46,7 @@ const registerUser = async (
   if (password.length < 6) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Password debe de ser minimo de 5 caracteres" });
+      .json({ message: "Password debe de ser minimo de 6 caracteres" });
   }
 
   if (name.length < 2) {

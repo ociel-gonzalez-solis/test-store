@@ -1,6 +1,7 @@
 import { soulisStoreApi } from "@/api";
 import { AuthLayout } from "@/components/layouts";
 import { NextLink } from "@/constants";
+import { AuthContext } from "@/context";
 import { validations } from "@/utils";
 import { ErrorOutline } from "@mui/icons-material";
 import {
@@ -12,7 +13,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type FormData = {
@@ -21,27 +23,23 @@ type FormData = {
 };
 
 const LoginPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
-  const [showError, setShowError] = useState<boolean>(false);
+  const router        = useRouter()
+  const { loginUser } = useContext(AuthContext);
+  
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const [showError, setShowError]                         = useState<boolean>(false);
 
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError((prev) => false);
-    
-    try {
-      const { data } = await soulisStoreApi.post("/user/login", {
-        email,
-        password,
-      });
-      const { token, user } = data;
-      console.log({ token, user });
-    } catch (error) {
-      console.log("Error de credenciales");
-      setTimeout(() => setShowError((prev) => true), 3000);
+    const isValidLogin = await loginUser(email, password);
+
+    if (!isValidLogin) {
+      setShowError((prev) => true);
+      setTimeout(() => setShowError((prev) => false), 3000);
+      return;
     }
+
+    router.replace('/');
   };
 
   return (
