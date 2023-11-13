@@ -12,6 +12,7 @@ import { IUser } from "@/interfaces";
 import { soulisStoreApi } from "@/api";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export interface IAuthState {
   isLoggedIn : boolean;
@@ -31,9 +32,18 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
   const router            = useRouter();
 
-  useEffect(() => {
-    checkToken();
-  }, []);
+  const {data, status} = useSession();
+
+   useEffect(() => {
+     if (status === "authenticated") {
+       // dispatch({ type: "[Auth] - Login", payload: data?.user as IUser });
+       console.log({ user: data?.user });
+     }
+   }, [status, data]);
+  
+  // useEffect(() => {
+  //   checkToken();
+  // }, []);
 
   const checkToken = async() => {
 
@@ -93,6 +103,14 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const logOut = () => {
       Cookies.remove("token");
       Cookies.remove("cart");
+      Cookies.get("firstName");
+      Cookies.get("lastName");
+      Cookies.get("address");
+      Cookies.get("address2");
+      Cookies.get("zip");
+      Cookies.get("city");
+      Cookies.get("country");
+      Cookies.get("phone");
       router.reload();
   }
 
