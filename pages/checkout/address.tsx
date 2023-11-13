@@ -61,7 +61,7 @@ const AddressPage = () => {
   const [countryCookie, setCountryCookie] = useState<string>("");
   useEffect(() => {
     const country = Cookies.get("country") || countries[4].code;
-    setCountryCookie((prevCountry) => country);
+    setCountryCookie((prevCountry) => country); 
   }, []);
 
   return (
