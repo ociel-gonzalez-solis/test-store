@@ -37,11 +37,7 @@ export const authOptions: NextAuthOptions = {
                 )
             }
         })
-    ], 
-    
-    // jwt() {
-    //     return null;
-    // },
+    ],
 
     callbacks: {
         async jwt({token, account, user}) {
@@ -52,7 +48,7 @@ export const authOptions: NextAuthOptions = {
 
                 switch(account.type){
                     case 'oauth':
-                        // TODO: Crear usuarioso verificar que existan en la bd
+                        token.user = await  dbUsers.oAuthToDbUser(user?.email || '', user?.name || '');
                     break;
 
                     case 'credentials':
