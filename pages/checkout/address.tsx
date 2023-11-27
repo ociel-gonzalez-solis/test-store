@@ -42,23 +42,27 @@ const getAddressFromCookies = ():FormData => {
 }
 
 const AddressPage = () => {
-  const { updateAddress } = useContext(CartContext)
-  const router            = useRouter();
+  const { updateAddress }                 = useContext(CartContext);
+  const router                            = useRouter();
+  const [countryCookie, setCountryCookie] = useState<string>("");
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
       defaultValues: getAddressFromCookies()
     }
   );
 
   const onSubmitAddress = (data: FormData) => {
     console.log(data);
-    
 
     updateAddress(data);
     router.push('/checkout/summary');
   }
 
-  const [countryCookie, setCountryCookie] = useState<string>("");
+  // useEffect(() => {
+  //   reset(getAddressFromCookies());
+  // }, [reset])
+  
+
   useEffect(() => {
     const country = Cookies.get("country") || countries[4].code;
     setCountryCookie((prevCountry) => country); 
@@ -202,27 +206,27 @@ const AddressPage = () => {
 
 export default AddressPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { token = "" } = req.cookies;
-  let isValidToken = false;
+// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+//   const { token = "" } = req.cookies;
+//   let isValidToken = false;
 
-  try {
-    await customJWT.isValidToken(token);
-    isValidToken = true;
-  } catch (error) {
-    isValidToken = false;
-  }
+//   try {
+//     await customJWT.isValidToken(token);
+//     isValidToken = true;
+//   } catch (error) {
+//     isValidToken = false;
+//   }
 
-  if (!isValidToken) {
-    return {
-      redirect: {
-        destination: "/auth/login?p=/checkout/address",
-        permanent  : false,
-      },
-    };
-  }
+//   if (!isValidToken) {
+//     return {
+//       redirect: {
+//         destination: "/auth/login?p=/checkout/address",
+//         permanent  : false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {},
-  };
-};
+//   return {
+//     props: {},
+//   };
+// };

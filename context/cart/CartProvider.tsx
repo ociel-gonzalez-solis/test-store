@@ -3,30 +3,14 @@ import { FC, PropsWithChildren, useEffect, useMemo, useReducer, useRef } from "r
 import Cookie from 'js-cookie';
 
 import { cartReducer, CartContext } from ".";
-import { ICartProduct } from "@/interfaces";
-
-export interface IOrderSummary {
-  numberOfItems: number;
-  subTotal     : number;
-  tax          : number;
-  total        : number;
-}
+import { ICartProduct, IOrderSummary, IShippingAddress } from "@/interfaces";
+import { soulisStoreApi } from "@/api";
+import { IOrder } from '../../interfaces/IOrder';
 
 export interface ICartState extends IOrderSummary {
   cart           : ICartProduct[];
   isLoaded       : boolean;
   shippingAddress?: IShippingAddress;
-}
-
-export interface IShippingAddress {
-  firstName : string;
-  lastName  : string;
-  address   : string;
-  address2 ?: string;
-  zip       : string;
-  city      : string;
-  country   : string;
-  phone     : string;
 }
 
 const CART_INITIAL_STATE: ICartState = {
@@ -195,14 +179,43 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   }
 
+  const createOrder = async() => {
+    if (!state.shippingAddress) {
+      throw new Error('No hay direccion de entrega');
+    }
+
+    const body: IOrder = {
+      orderItems     : state.cart.map((p) => ({
+          ...p,
+          size: p.size!
+        })),
+      shippingAddress: state.shippingAddress,
+      numberOfItems  : state.numberOfItems,
+      subTotal       : state.subTotal,
+      tax            : state.tax,
+      total          : state.total,
+      isPaid         : false,
+    }
+
+    try {
+      const { data } = await soulisStoreApi.post("/orders", body);
+      console.log({data});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <CartContext.Provider
       value={{
         ...state,
+        // Methods
         addProductToCart,
         updateQuantity,
         removeCartProduct,
         updateAddress,
+        // Orders
+        createOrder
       }}
     >
       {children}

@@ -1,54 +1,41 @@
-import { isValidToken } from "@/utils/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+
+import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  // const previousPage = req.nextUrl.pathname;
+  // const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRETE });
+  // console.log(session);
+  // if (!session){
+  //   const requestedPage = req.nextUrl.pathname;
+  //   const url           = req.nextUrl.clone();
 
-  // if (previousPage.startsWith("/checkout")) {
-  //   const token = req.cookies.get("token")?.value;
-  //   console.log(token);
-  //   if (!token) {
-  //     console.log('fallo');
-  //     return NextResponse.redirect(
-  //       new URL(`/auth/login?p=${previousPage}`, req.url)
-  //     );
-  //   }
-  //   try {
-  //     await isValidToken(token);
-  //     return NextResponse.next();
-  //   } catch (error) {
-  //     console.log(error);
-  //     return NextResponse.redirect(
-  //       new URL(`/auth/login?p=${previousPage}`, req.url)
-  //     );
-  //   }
-  // }
+  //   url.pathname = `/auth/login`;
+  //   url.search   = `p=${requestedPage}`;
+    
+    // return NextResponse.redirect(url);
+    // }
+
+  const requestedPage = req.nextUrl.pathname;
+
+  if (req.nextUrl.pathname.startsWith("/checkout/address")) {
+    //* Informacion util de la session de next auth
+    const session = await getToken({
+      req   : req,
+      secret: process.env.NEXTAUTH_SECRETE,
+      raw   : true,
+    });
+
+    if (!session) {
+      return NextResponse.redirect(new URL(`/auth/login?p=${requestedPage}`, req.url));
+    }
+  }
+
+  // return NextResponse.redirect(new URL('/', req.url));
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/checkout/:path*"],
+  matcher: ["/checkout/address", "/checkout/summary"],
 };
-
-
-
-// export async function middleware2(req: NextRequest) {
-//   const previousPage = req.nextUrl.pathname
-
-//   if (previousPage.startsWith("/checkout")) {
-//     const token = req.cookies.get("token")?.value
-//     if (!token || !(await isValidToken(token))) {
-//       return NextResponse.redirect(
-//         new URL(`/auth/login?p=${previousPage}`, req.url)
-//       )
-//     }
-
-//     try {
-//       await isValidToken(token)
-//       return NextResponse.next()
-//     } catch (error) {
-//       return NextResponse.redirect(
-//         new URL(`/auth/login?p=${previousPage}`, req.url)
-//       )
-//     }
-//   }
-// }

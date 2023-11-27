@@ -14,10 +14,24 @@ import {
   Button,
   Link,
 } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const SummaryPage = () => {
-  const { shippingAddress, numberOfItems } = useContext(CartContext);
+  const router = useRouter();
+  
+  const { shippingAddress, numberOfItems,createOrder } = useContext(CartContext);
+
+  useEffect(() => {
+    if (!Cookies.get('firstName')) {
+      router.push('/checkout/address');
+    }
+  }, [router]);
+  
+  const onCreateOrder = () => {
+    createOrder();
+  }
 
   const num_items = numberOfItems === 1 ? "Producto" : "Productos";
 
@@ -35,8 +49,6 @@ const SummaryPage = () => {
     country,
     phone,
   } = shippingAddress;
-
-
 
   return (
     <ShopLayout title="Resumen de orden" pageDescription="Resumen de la orden">
@@ -90,8 +102,13 @@ const SummaryPage = () => {
               <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
-                <Button color="secondary" className="circular-btn" fullWidth>
-                  Checkout
+                <Button
+                  color="secondary"
+                  className="circular-btn"
+                  fullWidth
+                  onClick={onCreateOrder}
+                >
+                  Confirmar Orden
                 </Button>
               </Box>
             </CardContent>

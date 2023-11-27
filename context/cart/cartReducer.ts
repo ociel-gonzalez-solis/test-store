@@ -1,5 +1,5 @@
-import { ICartProduct } from "@/interfaces";
-import { ICartState, IOrderSummary, IShippingAddress } from ".";
+import { ICartProduct, IOrderSummary, IShippingAddress } from "@/interfaces";
+import { ICartState } from ".";
 
 type CartActionType =
     | { type: '[Cart] - LoadCart from cookies | storage', payload: ICartProduct[] }

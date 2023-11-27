@@ -4,6 +4,8 @@ import { AuthContext } from "@/context";
 import { validations } from "@/utils";
 import { ErrorOutline } from "@mui/icons-material";
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from "@mui/material";
+import { GetServerSideProps } from "next";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -33,9 +35,9 @@ const RegisterPage = () => {
       setTimeout(() => setShowError((prev) => false), 3000);
       return;
     }
-    const destination = router.query.p?.toString() || '/'
-
-    router.replace(destination);
+    // const destination = router.query.p?.toString() || '/'
+    // router.replace(destination);
+    await signIn('credentials', {email, password});
   };
 
   return (
@@ -124,5 +126,27 @@ const RegisterPage = () => {
     </AuthLayout>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async ({req, query}) => {
+  const session = await getSession({req});
+  // console.log(session);
+
+  const {p = '/'} = query;
+
+  if (session) {
+    return {
+      redirect: {
+        destination: p.toString(),
+        permanent  : false,
+      }
+    }
+  }
+
+  return {
+    props: {
+
+    }
+  }
+}
 
 export default RegisterPage;

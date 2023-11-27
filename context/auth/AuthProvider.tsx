@@ -77,7 +77,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const registerUser = async (name: string, email: string, password: string) : Promise<IRegisterUser> => {
     try {
-      const { data } = await soulisStoreApi.post('/user/register', {name, email, password});
+      const { data }         = await soulisStoreApi.post('/user/register', {name, email, password});
       const  { token, user } = data;
       Cookies.set('token', token);
       dispatch({ type: '[Auth] - Login', payload: user});

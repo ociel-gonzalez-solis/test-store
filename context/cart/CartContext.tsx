@@ -1,6 +1,5 @@
-import { ICartProduct } from "@/interfaces";
+import { ICartProduct, IOrderSummary, IShippingAddress } from "@/interfaces";
 import { createContext } from "react";
-import { IOrderSummary, IShippingAddress } from ".";
 
 interface ContextProps extends IOrderSummary {
 cart            : ICartProduct[];
@@ -14,7 +13,8 @@ shippingAddress?: IShippingAddress
 addProductToCart : (product: ICartProduct) => void;
 updateQuantity   : (product: ICartProduct) => void;
 removeCartProduct: (product: ICartProduct) => void;
-updateAddress    : (address: IShippingAddress) => void
+updateAddress    : (address: IShippingAddress) => void;
+createOrder      : () => Promise<void>
 
 }
 
