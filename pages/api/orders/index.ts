@@ -1,4 +1,8 @@
+import { IOrder } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
+// import { getSession } from 'next-auth/react';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from '../auth/[...nextauth]'
 
 type Data = {
     message: string
@@ -10,13 +14,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return createOrder(req, res);
     
         default:
-            return res.status(200).json({ message: 'Example' })
+            res.status(400).json({ message: 'Bad Requested' })
     }
     
 }
 
 const createOrder = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const body = req.body;
+    const { orderItems, total } = req.body as IOrder;
+    // console.log({req});
 
-    return res.status(200).json(body)
+    //! Verificar que tengamos un usuario
+    const session: any = await getServerSession(req, res, authOptions);
+    // const session: any = await getSession({req});
+
+    return res.status(200).json(session);
 }

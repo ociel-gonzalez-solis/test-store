@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 const SummaryPage = () => {
   const router = useRouter();
   
-  const { shippingAddress, numberOfItems,createOrder } = useContext(CartContext);
+  const { shippingAddress, numberOfItems, createOrder } = useContext(CartContext);
 
   useEffect(() => {
     if (!Cookies.get('firstName')) {

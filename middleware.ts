@@ -25,6 +25,7 @@ export async function middleware(req: NextRequest) {
       secret: process.env.NEXTAUTH_SECRETE,
       raw   : true,
     });
+    console.log(session);
 
     if (!session) {
       return NextResponse.redirect(new URL(`/auth/login?p=${requestedPage}`, req.url));

@@ -17,37 +17,48 @@ export const authOptions: NextAuthOptions = {
     // Configure one or more authentication providers
     providers: [
         GithubProvider({
-            clientId    : process.env.GITHUB_ID!,
-            clientSecret: process.env.GITHUB_SECRET!,
+            clientId    : process.env.GITHUB_ID! || "",
+            clientSecret: process.env.GITHUB_SECRET! || "",
         }),
         // ...add more providers here
         Credentials({
             name: 'custom-login',
             credentials: {
-                email   : {label: 'Correo:', type: 'email', placeholder: 'Tu correo@google.com'},
-                password: { label: 'Secreto:', type: 'password', placeholder: 'Secreto' },
+                email: {
+                    label       : "Email:",
+                    type        : "email",
+                    placeholder : "correo@google.com",
+                    autocomplete: "off",
+                },
+                password: {
+                    label       : "Password:",
+                    type        : "password",
+                    placeholder : "Password",
+                    autocomplete: "off",
+                },
             },
             async authorize(credentials){
                 console.log({credentials});
 
                 // return {_id: '123', name: 'Juan', email: 'juan@google.com', role: 'admin'};
-
+                if (!credentials) return null;
                 return await dbUsers.checkUserEmailPassword(
-                    credentials!.email, credentials!.password
+                    credentials!.email,
+                    credentials!.password
                 )
             }
         })
     ],
 
     pages: {
-        signIn : '/auth/login',
-        newUser: '/auth/register',
+        signIn : "/auth/login",
+        newUser: "/auth/register",
     },
 
     session: {
-        maxAge   : 2592000,
-        strategy : 'jwt',
-        updateAge: 86400
+        maxAge   : 2592000,   /// 30d
+        strategy : "jwt",
+        updateAge: 86400,     // cada día
     },
 
     callbacks: {
@@ -59,7 +70,10 @@ export const authOptions: NextAuthOptions = {
 
                 switch(account.type){
                     case 'oauth':
-                        token.user = await  dbUsers.oAuthToDbUser(user?.email || '', user?.name || '');
+                        token.user = await  dbUsers.oAuthToDbUser(
+                            user?.email || '',
+                            user?.name || ''
+                        );
                     break;
 
                     case 'credentials':
@@ -68,12 +82,13 @@ export const authOptions: NextAuthOptions = {
                 }
             }
 
+            console.log(token, "token");
             return token;
         },
         async session({ session, token, user }){
             console.log({session, token, user });
 
-            session.accessToken = token.accessToken as any;
+            session.accessToken = token.accessToken as string;
             session.user        = token.user as any;
 
             return session;
@@ -81,4 +96,4 @@ export const authOptions: NextAuthOptions = {
     }
 }
 
-export default NextAuth(authOptions)
+export default NextAuth(authOptions);
